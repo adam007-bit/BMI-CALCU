@@ -122,7 +122,6 @@
     .overweight { color: #e67e22; }
     .obese { color: #e74c3c; }
 
-    /* Toggle Switch */
     .toggle-switch {
       display: flex;
       align-items: center;
@@ -201,24 +200,32 @@
       <div id="result"></div>
     </div>
 
-    <!-- Sound -->
-    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
   </div>
 
   <script>
+    function toggleDarkMode() {
+      document.getElementById('app').classList.toggle("dark");
+    }
+
     function calculateBMI() {
       const weight = parseFloat(document.getElementById("weight").value);
       const heightCm = parseFloat(document.getElementById("height").value);
       const resultDiv = document.getElementById("result");
       const sound = document.getElementById("clickSound");
 
-      sound.currentTime = 0;
-      sound.play();
-
       if (!weight || !heightCm || heightCm <= 0) {
         resultDiv.innerHTML = `<span style="color: #c0392b;">Please enter valid numbers.</span>`;
         resultDiv.className = 'show';
         return;
+      }
+
+      // Play sound safely
+      try {
+        sound.currentTime = 0;
+        sound.play();
+      } catch (e) {
+        console.warn("Sound couldn't play:", e);
       }
 
       const heightM = heightCm / 100;
@@ -240,11 +247,7 @@
       }
 
       resultDiv.innerHTML = `Your BMI is <strong>${bmi.toFixed(2)}</strong> - <span class="${className}">${status}</span>`;
-      resultDiv.className = 'show';
-    }
-
-    function toggleDarkMode() {
-      document.getElementById('app').classList.toggle("dark");
+      resultDiv.className = `show ${className}`;
     }
   </script>
 </body>

@@ -6,7 +6,8 @@
   <title>BMI Calculator</title>
   <style>
     :root {
-      --bg-color: #ffffff;
+      --bg-gradient: linear-gradient(to right, #6dd5fa, #2980b9);
+      --card-bg: #ffffff;
       --text-color: #2c3e50;
       --input-bg: #f2f2f2;
       --button-bg: #3498db;
@@ -14,12 +15,13 @@
       --card-shadow: rgba(0, 0, 0, 0.2);
     }
 
-    body.dark {
-      --bg-color: #1e272e;
+    .dark {
+      --bg-gradient: linear-gradient(to right, #1e272e, #2f3640);
+      --card-bg: #2c3e50;
       --text-color: #ecf0f1;
-      --input-bg: #2f3640;
-      --button-bg: #40739e;
-      --button-hover: #2980b9;
+      --input-bg: #34495e;
+      --button-bg: #2980b9;
+      --button-hover: #1abc9c;
       --card-shadow: rgba(255, 255, 255, 0.1);
     }
 
@@ -28,19 +30,22 @@
     }
 
     body {
-      background: linear-gradient(to right, #6dd5fa, #2980b9);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .app {
+      background: var(--bg-gradient);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      transition: background 0.3s;
+      transition: background 0.5s ease;
     }
 
     .container {
-      background: var(--bg-color);
+      background: var(--card-bg);
       color: var(--text-color);
       padding: 30px 25px;
       border-radius: 20px;
@@ -88,159 +93,3 @@
       transition: background 0.3s;
     }
 
-    button:hover {
-      background: var(--button-hover);
-    }
-
-    #result {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: none;
-    }
-
-    .show {
-      animation: slideUpFade 0.6s ease forwards;
-    }
-
-    @keyframes slideUpFade {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .underweight { color: #f39c12; }
-    .normal { color: #27ae60; }
-    .overweight { color: #e67e22; }
-    .obese { color: #e74c3c; }
-
-    /* Toggle Switch */
-    .toggle-switch {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 15px;
-    }
-
-    .switch-label {
-      margin-right: 10px;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 24px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0;
-      right: 0; bottom: 0;
-      background-color: #ccc;
-      border-radius: 34px;
-      transition: .4s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      border-radius: 50%;
-      transition: .4s;
-    }
-
-    input:checked + .slider {
-      background-color: #3498db;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-
-    @media (max-width: 500px) {
-      h2 { font-size: 20px; }
-      input, button { font-size: 15px; }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="container">
-    <div class="toggle-switch">
-      <span class="switch-label">🌞/🌙</span>
-      <label class="switch">
-        <input type="checkbox" id="darkToggle" onchange="toggleDarkMode()">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <h2>BMI Calculator</h2>
-    <input type="number" id="weight" placeholder="Weight (kg)" />
-    <input type="number" id="height" placeholder="Height (cm)" />
-    <button onclick="calculateBMI()">Calculate</button>
-    <div id="result"></div>
-  </div>
-
-  <!-- Sound -->
-  <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
-
-  <script>
-    function calculateBMI() {
-      const weight = parseFloat(document.getElementById("weight").value);
-      const heightCm = parseFloat(document.getElementById("height").value);
-      const resultDiv = document.getElementById("result");
-      const sound = document.getElementById("clickSound");
-
-      sound.currentTime = 0;
-      sound.play();
-
-      if (!weight || !heightCm || heightCm <= 0) {
-        resultDiv.innerHTML = `<span style="color: #c0392b;">Please enter valid numbers.</span>`;
-        resultDiv.className = 'show';
-        return;
-      }
-
-      const heightM = heightCm / 100;
-      const bmi = weight / (heightM * heightM);
-      let status = '', className = '';
-
-      if (bmi < 18.5) {
-        status = 'Underweight';
-        className = 'underweight';
-      } else if (bmi < 24.9) {
-        status = 'Normal';
-        className = 'normal';
-      } else if (bmi < 29.9) {
-        status = 'Overweight';
-        className = 'overweight';
-      } else {
-        status = 'Obese';
-        className = 'obese';
-      }
-
-      resultDiv.innerHTML = `Your BMI is <strong>${bmi.toFixed(2)}</strong> - <span class="${className}">${status}</span>`;
-      resultDiv.className = 'show';
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-    }
-  </script>
-
-</body>
-</html>
